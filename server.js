@@ -15,20 +15,24 @@ const io = new Server(server, {
   }
 });
 
-// --- Game Constants & Data ---
-const WORDS_DB = [
-  { citizen: 'Apple', imposter: 'Pear' },
-  { citizen: 'Dog', imposter: 'Wolf' },
-  { citizen: 'Car', imposter: 'Truck' },
-  { citizen: 'Coffee', imposter: 'Tea' },
-  { citizen: 'Ocean', imposter: 'Lake' }
-];
+const wordData = require('./word.json');
+
+// Flatten all category pairs into one pool
+// Each entry: { citizen, imposter, category }
+const WORDS_DB = wordData.categories.flatMap(cat =>
+  cat.pairs.map(pair => ({
+    citizen: pair.citizen,
+    imposter: pair.undercover,
+    category: cat.name
+  }))
+);
+
+console.log(`Loaded ${WORDS_DB.length} word pairs across ${wordData.categories.length} categories.`);
 
 // In-memory storage
-// rooms = { [roomId]: { players: [], gameState: 'LOBBY', ... } }
 const rooms = {};
 
-// Helper to get diverse word pair
+// Pick a random word pair
 const getRandomWordPair = () => WORDS_DB[Math.floor(Math.random() * WORDS_DB.length)];
 
 // Helper to generate short room ID
@@ -40,6 +44,59 @@ const generateRoomId = () => {
   }
   return result;
 };
+
+// ── Turn Timer ────────────────────────────────────────────────────
+const TURN_SECONDS = 30;
+const timers = {}; // { [roomId]: intervalId }
+
+function clearTurnTimer(roomId) {
+  if (timers[roomId]) {
+    clearInterval(timers[roomId]);
+    delete timers[roomId];
+  }
+}
+
+function startTurnTimer(roomId) {
+  clearTurnTimer(roomId); // Always clear any existing timer first
+  const room = rooms[roomId];
+  if (!room) return;
+
+  let remaining = TURN_SECONDS;
+  io.to(roomId).emit('timerTick', remaining);
+
+  timers[roomId] = setInterval(() => {
+    remaining--;
+    io.to(roomId).emit('timerTick', remaining);
+
+    if (remaining <= 0) {
+      clearTurnTimer(roomId);
+      const r = rooms[roomId];
+      if (!r || r.gameState !== 'PLAYING') return;
+
+      const skippedPlayer = r.players[r.turnIndex];
+
+      // Announce time up
+      io.to(roomId).emit('playerAction', {
+        username: skippedPlayer.username,
+        action: 'WORD',
+        payload: '⏰ (time\'s up — skipped)'
+      });
+
+      // Advance turn
+      const nextIndex = (r.turnIndex + 1) % r.players.length;
+      if (nextIndex === 0) {
+        r.gameState = 'VOTING';
+        r.votes = {};
+        r.players.forEach(p => p.hasVoted = false);
+        io.to(roomId).emit('phaseChange', 'VOTING');
+      } else {
+        r.turnIndex = nextIndex;
+        io.to(roomId).emit('turnUpdate', { currentPlayerId: r.players[r.turnIndex].id });
+        startTurnTimer(roomId);
+      }
+    }
+  }, 1000);
+}
 
 // --- Socket Logic ---
 io.on('connection', (socket) => {
@@ -143,18 +200,20 @@ io.on('connection', (socket) => {
         p.role = 'CITIZEN';
         p.word = wordPair.citizen;
       }
-      // Send private role info
+      // Send private role info + category (all players see the category)
       io.to(p.id).emit('gameStarted', {
         role: p.role,
         word: p.word,
-        players: room.players.map(pl => ({ id: pl.id, username: pl.username })) // Public player list
+        category: wordPair.category,
+        players: room.players.map(pl => ({ id: pl.id, username: pl.username, avatar: pl.avatar }))
       });
     });
 
-    // Notify whose turn it is
+    // Notify whose turn it is and start timer
     io.to(roomId).emit('turnUpdate', {
       currentPlayerId: room.players[room.turnIndex].id
     });
+    startTurnTimer(roomId);
   });
 
   // 4. Submit Word (Turn Action)
@@ -168,6 +227,8 @@ io.on('connection', (socket) => {
       return;
     }
 
+    clearTurnTimer(roomId); // Stop timer as soon as word is submitted
+
     // Broadcast the word
     io.to(roomId).emit('playerAction', {
       username: currentPlayer.username,
@@ -176,15 +237,11 @@ io.on('connection', (socket) => {
     });
 
     // Move to next turn
-    let nextIndex = (room.turnIndex + 1) % room.players.length;
-    // Skip dead players if we had elimination mechanics mid-game (not in this simple version yet)
+    const nextIndex = (room.turnIndex + 1) % room.players.length;
 
-    // Check if full round completes? 
-    // For simple Undercover, usually 1 round of words then vote.
-    // We'll simulate: Everyone speaks once -> Voting
     if (nextIndex === 0) {
       room.gameState = 'VOTING';
-      room.votes = {}; // Reset votes
+      room.votes = {};
       room.players.forEach(p => p.hasVoted = false);
       io.to(roomId).emit('phaseChange', 'VOTING');
     } else {
@@ -192,6 +249,7 @@ io.on('connection', (socket) => {
       io.to(roomId).emit('turnUpdate', {
         currentPlayerId: room.players[room.turnIndex].id
       });
+      startTurnTimer(roomId); // Start fresh timer for next player
     }
   });
 
@@ -237,11 +295,12 @@ io.on('connection', (socket) => {
           : 'Tie! No one eliminated.';
         io.to(roomId).emit('roundResult', { message: skipMsg, eliminated: null });
         room.gameState = 'PLAYING';
-        room.turnIndex = 0; // Reset to first player
+        room.turnIndex = 0;
         room.votes = {};
         room.players.forEach(p => p.hasVoted = false);
         io.to(roomId).emit('phaseChange', 'PLAYING');
         io.to(roomId).emit('turnUpdate', { currentPlayerId: room.players[0].id });
+        startTurnTimer(roomId);
       } else {
         const eliminatedPlayer = room.players.find(p => p.id === eliminatedId);
         eliminatedPlayer.isAlive = false;
@@ -271,11 +330,12 @@ io.on('connection', (socket) => {
             room.gameState = 'ENDED';
           } else {
             room.gameState = 'PLAYING';
-            room.turnIndex = 0; // Reset to first player
+            room.turnIndex = 0;
             room.votes = {};
             room.players.forEach(p => p.hasVoted = false);
             io.to(roomId).emit('phaseChange', 'PLAYING');
             io.to(roomId).emit('turnUpdate', { currentPlayerId: room.players.find(p => p.isAlive).id });
+            startTurnTimer(roomId);
           }
         }
       }
@@ -285,16 +345,14 @@ io.on('connection', (socket) => {
   // 6. Disconnect
   socket.on('disconnect', () => {
     console.log('User disconnected:', socket.id);
-    // Remove player from their room
     for (const roomId in rooms) {
       const room = rooms[roomId];
       const index = room.players.findIndex(p => p.id === socket.id);
       if (index !== -1) {
         room.players.splice(index, 1);
         io.to(roomId).emit('updateRoom', room);
-
-        // If room empty, delete it
         if (room.players.length === 0) {
+          clearTurnTimer(roomId);
           delete rooms[roomId];
         }
         break;

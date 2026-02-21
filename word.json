@@ -1,0 +1,414 @@
+{
+    "categories": [
+        {
+            "name": "Mekla w Chrob",
+            "pairs": [
+                {
+                    "citizen": "Tofé7a",
+                    "undercover": "Inba"
+                },
+                {
+                    "citizen": "9ahwa",
+                    "undercover": "Tay"
+                },
+                {
+                    "citizen": "Pizza",
+                    "undercover": "Ma9rouna"
+                },
+                {
+                    "citizen": "Hlib",
+                    "undercover": "Lben"
+                },
+                {
+                    "citizen": "Choklata",
+                    "undercover": "Glace"
+                },
+                {
+                    "citizen": "Chamsia",
+                    "undercover": "Ma9rouna"
+                },
+                {
+                    "citizen": "Brik",
+                    "undercover": "Tajine"
+                },
+                {
+                    "citizen": "Kosksi",
+                    "undercover": "Ma9rouna"
+                },
+                {
+                    "citizen": "Sandwich",
+                    "undercover": "Libanais"
+                },
+                {
+                    "citizen": "Banen",
+                    "undercover": "Dalle3"
+                },
+                {
+                    "citizen": "Frayz",
+                    "undercover": "Framboise"
+                },
+                {
+                    "citizen": "Kebda",
+                    "undercover": "L7am"
+                },
+                {
+                    "citizen": "Hout",
+                    "undercover": "Crevette"
+                },
+                {
+                    "citizen": "Zitoun",
+                    "undercover": "Kappar"
+                },
+                {
+                    "citizen": "Felfel",
+                    "undercover": "Tmatem"
+                },
+                {
+                    "citizen": "Thoum",
+                    "undercover": "Bsal"
+                },
+                {
+                    "citizen": "Ma3dnous",
+                    "undercover": "Sla9"
+                },
+                {
+                    "citizen": "Louz",
+                    "undercover": "Kakaouiya"
+                },
+                {
+                    "citizen": "Jouj",
+                    "undercover": "Noisette"
+                },
+                {
+                    "citizen": "Chapati",
+                    "undercover": "Mlawi"
+                },
+                {
+                    "citizen": "Karantika",
+                    "undercover": "Lablabi"
+                },
+                {
+                    "citizen": "Citronnade",
+                    "undercover": "Orangeade"
+                },
+                {
+                    "citizen": "Gazeuse",
+                    "undercover": "Eau minérale"
+                },
+                {
+                    "citizen": "Frites",
+                    "undercover": "Chips"
+                },
+                {
+                    "citizen": "Mloukhiya",
+                    "undercover": "Gnaouia"
+                },
+                {
+                    "citizen": "Kamoun",
+                    "undercover": "Tabel"
+                },
+                {
+                    "citizen": "Mel7",
+                    "undercover": "Soker"
+                },
+                {
+                    "citizen": "Miel",
+                    "undercover": "Confiture"
+                },
+                {
+                    "citizen": "Yogourt",
+                    "undercover": "Raib"
+                },
+                {
+                    "citizen": "Omlat",
+                    "undercover": "Chakchouka"
+                },
+                {
+                    "citizen": "Baguette",
+                    "undercover": "Tabouna"
+                },
+                {
+                    "citizen": "Ma9roudh",
+                    "undercover": "Zlabia"
+                },
+                {
+                    "citizen": "Samsa",
+                    "undercover": "Baklawa"
+                },
+                {
+                    "citizen": "Biscuit",
+                    "undercover": "Cake"
+                },
+                {
+                    "citizen": "Croissant",
+                    "undercover": "Pain au chocolat"
+                },
+                {
+                    "citizen": "Sushi",
+                    "undercover": "Kebab"
+                },
+                {
+                    "citizen": "Groseille",
+                    "undercover": "Cerise"
+                },
+                {
+                    "citizen": "Ananas",
+                    "undercover": "Mangue"
+                },
+                {
+                    "citizen": "Kiwi",
+                    "undercover": "Avocat"
+                },
+                {
+                    "citizen": "Champignon",
+                    "undercover": "Truffes"
+                },
+                {
+                    "citizen": "Harissa",
+                    "undercover": "Hrouss"
+                },
+                {
+                    "citizen": "Tonn",
+                    "undercover": "Sardina"
+                },
+                {
+                    "citizen": "Kiri",
+                    "undercover": "Camembert"
+                },
+                {
+                    "citizen": "Mayonnaise",
+                    "undercover": "Moutarde"
+                },
+                {
+                    "citizen": "Ketchup",
+                    "undercover": "Sauce Barbecue"
+                },
+                {
+                    "citizen": "Lmerguez",
+                    "undercover": "Salami"
+                },
+                {
+                    "citizen": "Coca",
+                    "undercover": "Pepsi"
+                },
+                {
+                    "citizen": "Jus",
+                    "undercover": "Smoothie"
+                },
+                {
+                    "citizen": "Gateau",
+                    "undercover": "Tarte"
+                },
+                {
+                    "citizen": "Riz",
+                    "undercover": "Blé"
+                }
+            ]
+        },
+        {
+            "name": "En-na9l w Tech",
+            "pairs": [
+                {
+                    "citizen": "Karhba",
+                    "undercover": "Kamion"
+                },
+                {
+                    "citizen": "Tayara",
+                    "undercover": "Hélicoptère"
+                },
+                {
+                    "citizen": "Bisklet",
+                    "undercover": "Moteur"
+                },
+                {
+                    "citizen": "Trino",
+                    "undercover": "Metro"
+                },
+                {
+                    "citizen": "Babbour",
+                    "undercover": "Yacht"
+                },
+                {
+                    "citizen": "Taxi",
+                    "undercover": "Louage"
+                },
+                {
+                    "citizen": "Car",
+                    "undercover": "Bus"
+                },
+                {
+                    "citizen": "Scooter",
+                    "undercover": "Vespa"
+                },
+                {
+                    "citizen": "Tractor",
+                    "undercover": "Camionnette"
+                },
+                {
+                    "citizen": "Talifoun",
+                    "undercover": "Tablette"
+                },
+                {
+                    "citizen": "PC",
+                    "undercover": "Laptop"
+                },
+                {
+                    "citizen": "Souris",
+                    "undercover": "Clavier"
+                },
+                {
+                    "citizen": "Ecran",
+                    "undercover": "TV"
+                },
+                {
+                    "citizen": "Internet",
+                    "undercover": "Wi-Fi"
+                },
+                {
+                    "citizen": "Google",
+                    "undercover": "Facebook"
+                },
+                {
+                    "citizen": "Instagram",
+                    "undercover": "TikTok"
+                },
+                {
+                    "citizen": "WhatsApp",
+                    "undercover": "Messenger"
+                },
+                {
+                    "citizen": "Playstation",
+                    "undercover": "Xbox"
+                },
+                {
+                    "citizen": "Casque",
+                    "undercover": "Ecouteurs"
+                },
+                {
+                    "citizen": "Appareil photo",
+                    "undercover": "Caméra"
+                },
+                {
+                    "citizen": "Montre",
+                    "undercover": "Smartwatch"
+                },
+                {
+                    "citizen": "Powerbank",
+                    "undercover": "Chargeur"
+                },
+                {
+                    "citizen": "E-mail",
+                    "undercover": "SMS"
+                },
+                {
+                    "citizen": "Robot",
+                    "undercover": "IA"
+                },
+                {
+                    "citizen": "Fusee",
+                    "undercover": "Satellite"
+                },
+                {
+                    "citizen": "Pneu",
+                    "undercover": "Volant"
+                },
+                {
+                    "citizen": "Frein",
+                    "undercover": "Embrayage"
+                },
+                {
+                    "citizen": "Autoroute",
+                    "undercover": "Kayess"
+                },
+                {
+                    "citizen": "Feu rouge",
+                    "undercover": "Stop"
+                },
+                {
+                    "citizen": "Parking",
+                    "undercover": "Garage"
+                },
+                {
+                    "citizen": "Essence",
+                    "undercover": "Gasoil"
+                },
+                {
+                    "citizen": "Batterie",
+                    "undercover": "Pile"
+                },
+                {
+                    "citizen": "Imprimante",
+                    "undercover": "Scanner"
+                },
+                {
+                    "citizen": "Micro",
+                    "undercover": "Haut-parleur"
+                },
+                {
+                    "citizen": "Ventilateur",
+                    "undercover": "Climatiseur"
+                },
+                {
+                    "citizen": "Frigo",
+                    "undercover": "Congélateur"
+                },
+                {
+                    "citizen": "Four",
+                    "undercover": "Micro-onde"
+                },
+                {
+                    "citizen": "Machine à laver",
+                    "undercover": "Lave-vaisselle"
+                },
+                {
+                    "citizen": "Aspirateur",
+                    "undercover": "Balai"
+                },
+                {
+                    "citizen": "Fer à repasser",
+                    "undercover": "Sèche-cheveux"
+                },
+                {
+                    "citizen": "USB",
+                    "undercover": "Disque dur"
+                },
+                {
+                    "citizen": "Netflix",
+                    "undercover": "YouTube"
+                },
+                {
+                    "citizen": "Bitcoin",
+                    "undercover": "Dollar"
+                },
+                {
+                    "citizen": "Calculatrice",
+                    "undercover": "Règle"
+                },
+                {
+                    "citizen": "Lampe",
+                    "undercover": "Bougie"
+                },
+                {
+                    "citizen": "Ascenseur",
+                    "undercover": "Escalier"
+                },
+                {
+                    "citizen": "Pont",
+                    "undercover": "Tunnel"
+                },
+                {
+                    "citizen": "Valise",
+                    "undercover": "Sac à dos"
+                },
+                {
+                    "citizen": "Parapluie",
+                    "undercover": "Manteau"
+                },
+                {
+                    "citizen": "Boussole",
+                    "undercover": "GPS"
+                }
+            ]
+        }
+    ]
+}
