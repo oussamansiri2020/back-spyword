@@ -115,7 +115,8 @@ io.on('connection', (socket) => {
       gameState: 'LOBBY',
       turnIndex: 0,
       wordPair: null,
-      votes: {}
+      votes: {},
+      playAgainVotes: new Set()
     };
 
     socket.join(roomId);
@@ -259,16 +260,16 @@ io.on('connection', (socket) => {
     if (!room || room.gameState !== 'VOTING') return;
 
     const player = room.players.find(p => p.id === socket.id);
-    if (!player || player.hasVoted) return;
+    if (!player || player.hasVoted || !player.isAlive) return;
 
     // Record vote ('SKIP' is a valid suspectId meaning the player skips)
     if (!room.votes[suspectId]) room.votes[suspectId] = 0;
     room.votes[suspectId]++;
     player.hasVoted = true;
 
-    // Check if all active players voted
+    // Check if all ALIVE players voted (only count alive voters to avoid dead-player deadlock)
     const activePlayersCount = room.players.filter(p => p.isAlive).length;
-    const votesCast = room.players.filter(p => p.hasVoted).length;
+    const votesCast = room.players.filter(p => p.isAlive && p.hasVoted).length;
 
     io.to(roomId).emit('voteUpdate', { votesCast, total: activePlayersCount });
 
@@ -333,6 +334,7 @@ io.on('connection', (socket) => {
             room.turnIndex = 0;
             room.votes = {};
             room.players.forEach(p => p.hasVoted = false);
+            io.to(roomId).emit('updateRoom', room); // sync dead-player state to all clients
             io.to(roomId).emit('phaseChange', 'PLAYING');
             io.to(roomId).emit('turnUpdate', { currentPlayerId: room.players.find(p => p.isAlive).id });
             startTurnTimer(roomId);
@@ -342,7 +344,45 @@ io.on('connection', (socket) => {
     }
   });
 
-  // 6. Disconnect
+  // 6. Play Again
+  socket.on('playAgain', (roomId) => {
+    const room = rooms[roomId];
+    if (!room || room.gameState !== 'ENDED') return;
+
+    // Immediately restart — no waiting for all players
+    room.playAgainVotes.clear();
+    room.votes = {};
+    room.players.forEach(p => {
+      p.isAlive = true;
+      p.hasVoted = false;
+      p.role = null;
+      p.word = null;
+    });
+
+    // Assign new roles + words
+    const wordPair = getRandomWordPair();
+    room.wordPair = wordPair;
+    room.gameState = 'PLAYING';
+    room.turnIndex = 0;
+
+    const imposterIndex = Math.floor(Math.random() * room.players.length);
+    room.players.forEach((p, index) => {
+      p.role = index === imposterIndex ? 'IMPOSTER' : 'CITIZEN';
+      p.word = index === imposterIndex ? wordPair.imposter : wordPair.citizen;
+      io.to(p.id).emit('gameStarted', {
+        role: p.role,
+        word: p.word,
+        category: wordPair.category,
+        players: room.players.map(pl => ({ id: pl.id, username: pl.username, avatar: pl.avatar }))
+      });
+    });
+
+    io.to(roomId).emit('updateRoom', room);
+    io.to(roomId).emit('turnUpdate', { currentPlayerId: room.players[0].id });
+    startTurnTimer(roomId);
+  });
+
+  // 7. Disconnect
   socket.on('disconnect', () => {
     console.log('User disconnected:', socket.id);
     for (const roomId in rooms) {
